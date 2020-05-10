@@ -22,6 +22,7 @@ endif()
 
 find_package(Threads REQUIRED)
 find_package(Boost 1.66.0 REQUIRED COMPONENTS thread system)
+find_package(ENCRYPTO_utils QUIET)
 
 add_library(RELIC::relic STATIC IMPORTED)
 set_target_properties(RELIC::relic PROPERTIES
