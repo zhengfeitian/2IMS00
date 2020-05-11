@@ -55,7 +55,7 @@ int32_t read_test_options(int32_t* argcp, char*** argvp, e_role* role,
 
 int32_t test_millionaire_prob_simple_circuit ( e_role role ) {
 // Setup parameters
-      string address = " 127.0.0.1 ";
+      string address = "127.0.0.1";
 	uint16_t port = 12421;
 	seclvl seclvl = get_sec_lvl (128) ;
 	e_sharing sharing = S_YAO ;
@@ -78,7 +78,7 @@ int32_t test_millionaire_prob_simple_circuit ( e_role role ) {
       	SERVER ) ;
 
       // Greater - than operation
-      share * s_out = circ -> PutGTGate ( s_alice_money , s_bob_money ) ;
+      share * s_out = circ -> PutMULGate ( s_alice_money , s_bob_money ) ;
 
      // Output share
       s_out = circ -> PutOUTGate ( s_out , ALL ) ;
@@ -94,10 +94,11 @@ int32_t test_millionaire_prob_simple_circuit ( e_role role ) {
       get_sharing_name ( sharing ) << " sharing : " << endl ;
 	printf ("\nAlice Money :\t %d", alice_money ) ;
 	printf ("\nBob Money :\t %d", bob_money ) ;
-	printf ("\nCircuit Result :\t %s" ,( output ? " Alice " : "Bob") ) ;
-	printf ("\nVerify Result : \t %s\n" ,(( alice_money > bob_money ) ?
-      		" Alice " : "Bob") ) ;
+	printf ("\nCircuit Result :\t %d" , output  ) ;
+	//printf ("\nVerify Result : \t %s\n" ,(( alice_money > bob_money ) ?
+      	//	" Alice " : "Bob") ) ;
 
+	party->Reset();
 	delete party ;
 	return 0;
  }
@@ -106,7 +107,7 @@ int main(int argc, char** argv) {
 
 	e_role role;
 	uint32_t bitlen = 32, nvals = 31, secparam = 128, nthreads = 1;
-	uint16_t port = 7766;
+	uint16_t port = 11421;
 	std::string address = "127.0.0.1";
 	int32_t test_op = -1;
 	e_mt_gen_alg mt_alg = MT_OT;
