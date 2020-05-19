@@ -10,7 +10,7 @@ if(RELIC_FOUND)
 elseif(NOT RELIC_FOUND AND NOT TARGET RELIC::relic)
 	message("RELIC was not found: add RELIC subdirectory")
 	add_subdirectory(/home/lx/seminar/extern/relic)
-															endif()
+endif()
 
 find_package(ABY QUIET)
 if(ABY_FOUND)
