@@ -164,6 +164,7 @@ void secure_sum(NaiveBayesClassifer model, e_role role){
 
 	model.setClassesCount(output_cls_cnt);
 
+
 //  attribute probability computation
 	party -> Reset();
 
@@ -196,7 +197,8 @@ int main(int argc, char** argv) {
 	//				nthreads, mt_alg, S_YAO);
 	
 	
-	test_millionaire_prob_simple_circuit(role);
+	secure_sum(model,role);
+//	test_millionaire_prob_simple_circuit(role);
 										//
 	return 0;
 }
