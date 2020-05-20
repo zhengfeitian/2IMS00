@@ -84,6 +84,11 @@ class NaiveBayesClassifer
 		for(int i = 0 ; i < num_C; i++){
 			classes[i] = sum_classes[i];
 		}
+		cout << "classes count set: " << endl;
+		for(int i = 0 ; i < num_C; i++){
+			cout << classes[i] << " ";
+		}
+		cout << endl;
 	}
 	void setAttrCount(uint32_t** sum_attr){
 		for(int i=0; i<num_C; i++){
