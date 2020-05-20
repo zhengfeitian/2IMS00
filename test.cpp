@@ -74,7 +74,7 @@ int32_t test_millionaire_prob_simple_circuit ( e_role role ) {
       // Input shares
       share * s_alice_money = circ -> PutINGate ( alice_money ,
       		money_bitlen , CLIENT ) ;
- share * s_bob_money = circ -> PutINGate ( bob_money , money_bitlen ,
+	share * s_bob_money = circ -> PutINGate ( bob_money , money_bitlen ,
       	SERVER ) ;
 
       // Greater - than operation

@@ -10,41 +10,64 @@ using namespace std;
 
 class NaiveBayesClassifer
 {
-	private:
-	// <class id, class probility> <C, P(C)>
-	unordered_map<int,double> classes;
-	// <class id, <attribute id, probability>> <C, <x, P(x|C)>>
-	unordered_map<int, unordered_map<int, double>> attributesPerClass;
 	public:
+	// <class id, class probility> <C, P(C)>
+	unordered_map<int,double> classes_prob;
+	uint32_t* classes = nullptr;
+	uint32_t num_C = 0;
+	uint32_t num_attr = 0;
+	uint32_t attr_nv = 0;
+	// <class id, <attribute id, probability>> <C, <x, P(x|C)>>
+	unordered_map<int, unordered_map<int, double>> attr_prob;
+	uint32_t** attributePerClass = nullptr; //class_id, attr_id, count
 	// input: vector< pair < class id, attribute id>> , DimSize is the number of attributes
-	NaiveBayesClassifer(vector<vector<int>> &data, int DimSize)
+	NaiveBayesClassifer(vector<vector<int>> &data, int DimSize, int C,int attr_nv):
+		num_C(C), num_attr(DimSize), attr_nv(attr_nv)
 	{
+
+		classes = new uint32_t[C];
+		memset(classes, 0, sizeof(uint32_t) * C);
+		attributePerClass = new uint32_t*[C];
+		for (int i = 0; i < C; i++) {
+			attributePerClass[i] = new uint32_t[attr_nv];
+			memset(attributePerClass[i], 0, attr_nv * sizeof(uint32_t));
+		}
+
+	
 	// start training
 	// count all classes and attributes
 		for(auto entry:data)
 		{
-			if(classes.find(entry[0])==classes.end()){
-				classes[entry[0]]=1;
-				unordered_map<int, double> pxc;
-				attributesPerClass[entry[0]] = pxc;
+			//if(classes.find(entry[0])==classes.end()){
+			if(entry[0]<0 || entry[0]>=num_C){
+				cout << "entry[0] " << entry[0] << endl;
+				cout << "classes error" << endl;
+				exit(1);
+				//classes[entry[0]]=1;
+				//unordered_map<int, double> pxc;
+				//attributesPerClass[entry[0]] = pxc;
 			}
 			else{
 				classes[entry[0]]+=1;
 			}
 			for(int k=1;k<=DimSize;k++)
 			{
-				if(attributesPerClass[entry[0]].find(entry[k]) == attributesPerClass[entry[0]].end())
+				//if(attributesPerClass[entry[0]].find(entry[k]) == attributesPerClass[entry[0]].end())
+				if(entry[k] < 0 || entry[k]>=attr_nv)
 				{
-					attributesPerClass[entry[0]][entry[k]] = 1;
+					cout << "attribute not found" << endl;
+					exit(1);
+					//attributesPerClass[entry[0]][entry[k]] = 1;
 				}
 				else
 				{
-					attributesPerClass[entry[0]][entry[k]] += 1;
+					attributePerClass[entry[0]][entry[k]] += 1;
 				}
 			}
 		}
 	// calculate probility per class and per attribute
-		for(auto seg: attributesPerClass)
+		/*
+		for(auto seg: attributePerClass)
 		{
 			cout<<" - - - Class "<<seg.first<< " - - - "<< endl;
 			for(auto entry: seg.second)
@@ -55,18 +78,43 @@ class NaiveBayesClassifer
 			classes[seg.first] /= data.size();
 			cout<<"Class P(C="<<seg.first<< ") = "<<classes[seg.first]<<endl;
 		}
+		*/
+	}
+	void setClassesCount(uint32_t* sum_classes){
+		for(int i = 0 ; i < num_C; i++){
+			classes[i] = sum_classes[i];
+		}
+	}
+	void setAttrCount(uint32_t** sum_attr){
+		for(int i=0; i<num_C; i++){
+			for(int j=0; j<attr_nv; j++){
+				attributePerClass[i][j] = sum_attr[i][j];
+			}
+		}
+	}
+	void calProbability(){
+		int total_classes = 0;
+		for(int i = 0 ; i < num_C; i++){
+			total_classes += classes[i];
+		}
+		for(int i=0; i<num_C; i++){
+			classes_prob[i] = classes[i]/double(total_classes);
+			for(int j=0; j < attr_nv; j++){
+				attr_prob[i][j] = attributePerClass[i][j]/double(classes[i]);
+			}
+		}
 	}
 	// predict class with attributes vector< attribute id>
 	int predict(vector<int> attributes)
 	{
 		int maxcid = -1;
 		double maxp = 0;
-		for(auto cls : classes)
+		for(auto cls : classes_prob)
 		{
 			// p(C|x) = p(C)*p(x1|C)*p(x2|C)*…
 			double pCx = cls.second;
 			for(int i = 0; i<attributes.size();i++){
-				pCx *= attributesPerClass[cls.first][attributes[i]];
+				pCx *= attr_prob[cls.first][attributes[i]];
 			}
 			
 			if(pCx > maxp){
@@ -114,16 +162,28 @@ int main() {
 	// color
 	{{"red", 0}, {"green", 1}, {"yellow", 2},
 	// shape
-	{"round", 10}, {"oval", 11}, {"heart", 12}};
+	{"round", 3}, {"oval", 4}, {"heart", 5}};
 	vector<vector<int>> data;
 	read_data(data, "train_s.txt",classmap,attrimap);
 	
 	random_shuffle(data.begin(),data.end());
 
 	// train model
-	NaiveBayesClassifer mymodel(data, 2);
+	NaiveBayesClassifer mymodel(data, 2, 3, 6);
+	cout << "classes : " << endl;
+	for (int i = 0; i < 3; i++) {
+		for (int j = 0; j < 6; j++) {
+			cout << mymodel.attributePerClass[i][j] << " ";
+		}
+		cout << endl;
+	}
+	for (int i = 0; i < 3;i++) {
+		cout << mymodel.classes[i] << " ";
+	}
+	cout << endl;
 	// predict with model
+	mymodel.calProbability();
 	int cls = mymodel.predict({attrimap["red"],attrimap["heart"]});
-	cout<<"Predicted class "<< cls <<endl;
+	//cout<<"Predicted class "<< cls <<endl;
 	return 0;
 }
