@@ -101,6 +101,15 @@ class NaiveBayesClassifer
 				attributePerClass[i][j] = sum_attr[i][j];
 			}
 		}
+		cout << "attr count set: " << endl;
+		for(int i=0; i<num_C; i++){
+			for(int j=0; j<attr_nv; j++){
+				attributePerClass[i][j] = sum_attr[i][j];
+				cout << attributePerClass[i][j] <<  " ";
+			}
+			cout << endl;
+		}
+			cout << endl;
 	}
 	void calProbability(){
 		int total_classes = 0;

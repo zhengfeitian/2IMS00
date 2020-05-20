@@ -64,57 +64,6 @@ int32_t read_test_options(int32_t* argcp, char*** argvp, e_role* role,
 }
 
 
-int32_t test_millionaire_prob_simple_circuit ( e_role role ) {
-// Setup parameters
-	string address = "127.0.0.1";
-	uint16_t port = 12421;
-	seclvl seclvl = get_sec_lvl (128) ;
-	e_sharing sharing = S_YAO ;
-	uint32_t bitlen = 32;
-	uint32_t nthreads = 1;
-	
-	ABYParty * party = new ABYParty ( role , ( char *) address . c_str () ,
-      	port , seclvl , bitlen , nthreads ) ;
-	vector<Sharing*>& sharings = party -> GetSharings () ;
-	Circuit * circ = sharings[sharing]->GetCircuitBuildRoutine() ;
-
-      // Plaintext values for testing and their bit length
-	uint32_t alice_money = 5;
-	uint32_t bob_money = 7;
-	uint32_t money_bitlen = 3;
-
-      // Input shares
-      share * s_alice_money = circ -> PutINGate ( alice_money ,
-      		money_bitlen , CLIENT ) ;
-	share * s_bob_money = circ -> PutINGate ( bob_money , money_bitlen ,
-      	SERVER ) ;
-
-      // Greater - than operation
-      share * s_out = circ -> PutMULGate ( s_alice_money , s_bob_money ) ;
-
-     // Output share
-      s_out = circ -> PutOUTGate ( s_out , ALL ) ;
-
- // Execute secure computation protocol
-       party -> ExecCircuit () ;
-
-       // Get plain text output
-       uint32_t output = s_out -> get_clear_value < uint32_t >() ;
-
-       // Verification
-      cout << " Testing Millionaire ’s Problem in " <<
-      get_sharing_name ( sharing ) << " sharing : " << endl ;
-	printf ("\nAlice Money :\t %d", alice_money ) ;
-	printf ("\nBob Money :\t %d", bob_money ) ;
-	printf ("\nCircuit Result :\t %d" , output  ) ;
-	//printf ("\nVerify Result : \t %s\n" ,(( alice_money > bob_money ) ?
-      	//	" Alice " : "Bob") ) ;
-
-	party->Reset();
-	delete party ;
-	return 0;
- }
-
 NaiveBayesClassifer train_model(string filename="train_s.txt"){
 	unordered_map<string, int> classmap = {{"apple", 0}, {"pineapple", 1}, {"cherry", 2}};
 	unordered_map<string, int> attrimap =
@@ -165,8 +114,34 @@ void secure_sum(NaiveBayesClassifer& model, e_role role){
 	model.setClassesCount(output_cls_cnt);
 
 
+	uint32_t** sum_attr_cnt = new uint32_t[model.num_C];
+
 //  attribute probability computation
 	party -> Reset();
+	for(int i = 0 ; i < model.num_C; i++){
+		sum_attr_cnt[i] = new int[model.attr_nv];
+		vector<Sharing*>& sharings = party -> GetSharings () ;
+		Circuit * circ = sharings[sharing]->GetCircuitBuildRoutine() ;
+
+		uint32_t nvals = model.attr_nv;
+		uint32_t* alice_attr = model.attributePerClass[i]
+		uint32_t* bob_attr =  model.attributePerClass[i];
+		uint32_t count_bitlen = 32;
+
+		share* sa_attrs = circ -> PutSIMDINGate(nvals, alice_attr,
+				count_bitlen, CLIENT);
+		share* sb_attrs = circ -> PutSIMDINGate(nvals, bob_attr,
+				count_bitlen, SERVER);
+		share* s_out = circ -> PutADDGate(sa_attr, sb_attr);
+		s_out = circ -> PutOUTGate(s_out, ALL);
+
+		party -> ExecCircuit();
+		uint32_t out_bitlen, out_nvals;
+		s_out -> get_clear_value_vec(&(sum_attr_cnt[i]), &out_bitlen, &out_nvals);
+		
+		party -> Reset();
+	}
+
 
 	// vector<Sharing*>& sharings = party -> GetSharings () ;
 	// Circuit * circ = sharings[sharing]->GetCircuitBuildRoutine() ;
@@ -198,8 +173,5 @@ int main(int argc, char** argv) {
 	
 	
 	secure_sum(model,role);
-//	test_millionaire_prob_simple_circuit(role);
-										//
 	return 0;
 }
-										//
