@@ -153,7 +153,7 @@ void secure_sum(NaiveBayesClassifer& model, e_role role){
 	share* sa_classes = circ -> PutSIMDINGate(model.num_C, alice_class,
 			count_bitlen, CLIENT);
 	share* sb_classes = circ -> PutSIMDINGate(model.num_C, bob_class,
-			count_bitlen, CLIENT);
+			count_bitlen, SERVER);
 	share* s_out = circ -> PutADDGate(sa_classes, sb_classes);
 	s_out = circ -> PutOUTGate(s_out, ALL);
 
