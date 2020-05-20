@@ -182,32 +182,32 @@ aby/fast:
 	$(MAKE) -f aby/ABY/src/abycore/CMakeFiles/aby.dir/build.make aby/ABY/src/abycore/CMakeFiles/aby.dir/build
 .PHONY : aby/fast
 
-test.o: test.cpp.o
+test1.o: test1.cpp.o
 
-.PHONY : test.o
+.PHONY : test1.o
 
 # target to build an object file
-test.cpp.o:
-	$(MAKE) -f CMakeFiles/Tutorial.dir/build.make CMakeFiles/Tutorial.dir/test.cpp.o
-.PHONY : test.cpp.o
+test1.cpp.o:
+	$(MAKE) -f CMakeFiles/Tutorial.dir/build.make CMakeFiles/Tutorial.dir/test1.cpp.o
+.PHONY : test1.cpp.o
 
-test.i: test.cpp.i
+test1.i: test1.cpp.i
 
-.PHONY : test.i
+.PHONY : test1.i
 
 # target to preprocess a source file
-test.cpp.i:
-	$(MAKE) -f CMakeFiles/Tutorial.dir/build.make CMakeFiles/Tutorial.dir/test.cpp.i
-.PHONY : test.cpp.i
+test1.cpp.i:
+	$(MAKE) -f CMakeFiles/Tutorial.dir/build.make CMakeFiles/Tutorial.dir/test1.cpp.i
+.PHONY : test1.cpp.i
 
-test.s: test.cpp.s
+test1.s: test1.cpp.s
 
-.PHONY : test.s
+.PHONY : test1.s
 
 # target to generate assembly for a file
-test.cpp.s:
-	$(MAKE) -f CMakeFiles/Tutorial.dir/build.make CMakeFiles/Tutorial.dir/test.cpp.s
-.PHONY : test.cpp.s
+test1.cpp.s:
+	$(MAKE) -f CMakeFiles/Tutorial.dir/build.make CMakeFiles/Tutorial.dir/test1.cpp.s
+.PHONY : test1.cpp.s
 
 # Help Target
 help:
@@ -223,9 +223,9 @@ help:
 	@echo "... install/local"
 	@echo "... install"
 	@echo "... aby"
-	@echo "... test.o"
-	@echo "... test.i"
-	@echo "... test.s"
+	@echo "... test1.o"
+	@echo "... test1.i"
+	@echo "... test1.s"
 .PHONY : help
 
 

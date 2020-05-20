@@ -1,0 +1,6 @@
+pineapple green oval 30
+pineapple yellow oval 70
+cherry yellow heart 50
+cherry yellow round 5
+apple yellow round 10
+apple red oval 5

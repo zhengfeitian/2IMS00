@@ -30,8 +30,11 @@ set_target_properties(RELIC::relic PROPERTIES
 	INTERFACE_INCLUDE_DIRECTORIES "/home/lx/seminar/extern/relic/include;/home/lx/seminar/extern/relic/include/low;/home/lx/seminar/extern/relic/include"
 )
 
+file(GLOB SOURCES
+	NaiveBayesClassifier.cpp
+		)
 # add the executable
-add_executable(Tutorial test.cpp)
+add_executable(Tutorial test1.cpp)
 target_link_libraries(Tutorial RELIC::relic)
 target_link_libraries(Tutorial ABY::aby)
 

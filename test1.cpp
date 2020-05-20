@@ -21,33 +21,6 @@
 using namespace std;
 
 
-void populateData(vector<vector<int>> &data, unordered_map<string, int> &classmap, unordered_map<string, int> &attrimap,
-	string c, string a1, string a2, int K)
-{
-	vector<int> apair = {classmap[c],attrimap[a1], attrimap[a2]};
-	vector<vector<int>> newarr(K, apair);
-	data.insert(data.end(), newarr.begin(), newarr.end());
-	cout << "data size: " << data.size() << endl;
-	return;
-
-}
-	
-void read_data(vector<vector<int>>& data, string filename,unordered_map<string,int> & classmap, 
-	unordered_map<string,int> & attrimap) {
-	ifstream in(filename);
-	if (!in)
-	{
-		cerr << "Cannot open the File : " << filename << std::endl;
-		return;
-	}
-	string c, a1, a2;
-	int k;
-	cout << "reading files" << endl;
-	while (in >> c >> a1 >> a2 >> k) {
-		populateData(data, classmap, attrimap, c, a1, a2, k);
-	}
-	cout << "data construction finished" << endl;
-}
 
 
 
@@ -159,7 +132,7 @@ NaiveBayesClassifer train_model(string filename="train_s.txt"){
 	return model;
 } 
 
-NaiveBayesClassifer secure_sum(NaiveBayesClassifer model, e_role role){
+void secure_sum(NaiveBayesClassifer model, e_role role){
 	string address = "127.0.0.1";
 	uint16_t port = 12421;
 	seclvl seclvl = get_sec_lvl (128) ;
@@ -172,7 +145,7 @@ NaiveBayesClassifer secure_sum(NaiveBayesClassifer model, e_role role){
 	vector<Sharing*>& sharings = party -> GetSharings () ;
 	Circuit * circ = sharings[sharing]->GetCircuitBuildRoutine() ;
 
-	uint32_t nvals = model.classes.size();
+	uint32_t nvals = model.num_C;
 	uint32_t* alice_class = model.classes;
 	uint32_t* bob_class =  model.classes; // place holder
 	uint32_t count_bitlen = 32;
@@ -181,7 +154,7 @@ NaiveBayesClassifer secure_sum(NaiveBayesClassifer model, e_role role){
 			count_bitlen, CLIENT);
 	share* sb_classes = circ -> PutSIMDINGate(model.num_C, bob_class,
 			count_bitlen, CLIENT);
-	share* s_out = circ -> PutADD(sa_classes, sb_classes);
+	share* s_out = circ -> PutADDGate(sa_classes, sb_classes);
 	s_out = circ -> PutOUTGate(s_out, ALL);
 
 	party -> ExecCircuit();
@@ -199,7 +172,7 @@ NaiveBayesClassifer secure_sum(NaiveBayesClassifer model, e_role role){
 
 	delete party;
 
-	return 0;
+	return;
 	
 	// sum model.attributesPerClass
 	

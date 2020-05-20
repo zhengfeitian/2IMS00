@@ -6,6 +6,22 @@
 
 #IncludeRegexTransform: 
 
+/home/lx/seminar/NaiveBayesClassifier.cpp
+map
+-
+algorithm
+-
+vector
+-
+iostream
+-
+fstream
+-
+unordered_map
+-
+cstdlib
+-
+
 /home/lx/seminar/aby/ABY/src/abycore/ABY_utils/ABYconstants.h
 string
 -
@@ -122,7 +138,7 @@ cstdint
 vector
 -
 
-/home/lx/seminar/test.cpp
+/home/lx/seminar/test1.cpp
 aby/ABY/src/abycore/circuit/booleancircuits.h
 /home/lx/seminar/aby/ABY/src/abycore/circuit/booleancircuits.h
 aby/ABY/src/abycore/circuit/arithmeticcircuits.h
@@ -137,11 +153,25 @@ ENCRYPTO_utils/crypto/crypto.h
 -
 ENCRYPTO_utils/parse_options.h
 -
+NaiveBayesClassifier.cpp
+/home/lx/seminar/NaiveBayesClassifier.cpp
 math.h
 -
 cassert
 -
 iostream
+-
+map
+-
+algorithm
+-
+vector
+-
+fstream
+-
+unordered_map
+-
+cstdlib
 -
 
 /include/ENCRYPTO_utils/cbitvector.h

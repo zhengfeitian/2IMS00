@@ -155,6 +155,7 @@ void read_data(vector<vector<int>>& data, string filename,unordered_map<string,i
 	cout << "data construction finished" << endl;
 }
 
+/*
 int main() {
 	// prepare a training dataset with 2 attributes and 3 classes
 	unordered_map<string, int> classmap = {{"apple", 0}, {"pineapple", 1}, {"cherry", 2}};
@@ -187,3 +188,4 @@ int main() {
 	//cout<<"Predicted class "<< cls <<endl;
 	return 0;
 }
+*/

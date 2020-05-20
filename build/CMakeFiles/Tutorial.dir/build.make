@@ -57,27 +57,27 @@ include CMakeFiles/Tutorial.dir/progress.make
 # Include the compile flags for this target's objects.
 include CMakeFiles/Tutorial.dir/flags.make
 
-CMakeFiles/Tutorial.dir/test.cpp.o: CMakeFiles/Tutorial.dir/flags.make
-CMakeFiles/Tutorial.dir/test.cpp.o: ../test.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/lx/seminar/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/Tutorial.dir/test.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/Tutorial.dir/test.cpp.o -c /home/lx/seminar/test.cpp
+CMakeFiles/Tutorial.dir/test1.cpp.o: CMakeFiles/Tutorial.dir/flags.make
+CMakeFiles/Tutorial.dir/test1.cpp.o: ../test1.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/lx/seminar/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/Tutorial.dir/test1.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/Tutorial.dir/test1.cpp.o -c /home/lx/seminar/test1.cpp
 
-CMakeFiles/Tutorial.dir/test.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/Tutorial.dir/test.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/lx/seminar/test.cpp > CMakeFiles/Tutorial.dir/test.cpp.i
+CMakeFiles/Tutorial.dir/test1.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/Tutorial.dir/test1.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/lx/seminar/test1.cpp > CMakeFiles/Tutorial.dir/test1.cpp.i
 
-CMakeFiles/Tutorial.dir/test.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Tutorial.dir/test.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/lx/seminar/test.cpp -o CMakeFiles/Tutorial.dir/test.cpp.s
+CMakeFiles/Tutorial.dir/test1.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Tutorial.dir/test1.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/lx/seminar/test1.cpp -o CMakeFiles/Tutorial.dir/test1.cpp.s
 
 # Object files for target Tutorial
 Tutorial_OBJECTS = \
-"CMakeFiles/Tutorial.dir/test.cpp.o"
+"CMakeFiles/Tutorial.dir/test1.cpp.o"
 
 # External object files for target Tutorial
 Tutorial_EXTERNAL_OBJECTS =
 
-Tutorial: CMakeFiles/Tutorial.dir/test.cpp.o
+Tutorial: CMakeFiles/Tutorial.dir/test1.cpp.o
 Tutorial: CMakeFiles/Tutorial.dir/build.make
 Tutorial: ../extern/relic/relic-target/lib/librelic_s.a
 Tutorial: aby/ABY/lib/libaby.a
