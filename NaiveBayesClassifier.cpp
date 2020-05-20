@@ -65,6 +65,11 @@ class NaiveBayesClassifer
 				}
 			}
 		}
+		cout << "In constructor classes count set: " << endl;
+		for(int i = 0 ; i < num_C; i++){
+			cout << classes[i] << " ";
+		}
+		cout << endl;
 	// calculate probility per class and per attribute
 		/*
 		for(auto seg: attributePerClass)

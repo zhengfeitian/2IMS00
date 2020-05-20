@@ -132,7 +132,7 @@ NaiveBayesClassifer train_model(string filename="train_s.txt"){
 	return model;
 } 
 
-void secure_sum(NaiveBayesClassifer model, e_role role){
+void secure_sum(NaiveBayesClassifer& model, e_role role){
 	string address = "127.0.0.1";
 	uint16_t port = 12421;
 	seclvl seclvl = get_sec_lvl (128) ;
