@@ -86,6 +86,7 @@ class NaiveBayesClassifer
 			cout<<"Class P(C="<<seg.first<< ") = "<<classes[seg.first]<<endl;
 		}
 		*/
+		zip_all_count();
 	}
 	void zip_all_count(){
 		for(int i = 0 ; i < num_C; i++){

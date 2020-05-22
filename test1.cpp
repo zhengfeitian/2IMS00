@@ -99,6 +99,8 @@ void secure_sum(NaiveBayesClassifer& model, e_role role){
 	uint32_t* bob_class =  model.zip_ca; // place holder
 	uint32_t count_bitlen = 32;
 
+	cout << "nvals " << nvals << endl;
+
 	share* sa_classes = circ -> PutSIMDINGate(nvals, alice_class,
 			count_bitlen, CLIENT);
 	share* sb_classes = circ -> PutSIMDINGate(nvals, bob_class,
