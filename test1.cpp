@@ -104,26 +104,15 @@ void secure_sum(NaiveBayesClassifer& model, e_role role){
 	share* sb_classes = circ -> PutSIMDINGate(model.num_C, bob_class,
 			count_bitlen, SERVER);
 	share* s_out = circ -> PutADDGate(sa_classes, sb_classes);
-	s_out = circ -> PutOUTGate(s_out, ALL);
-
-	party -> ExecCircuit();
-	uint32_t* output_cls_cnt;
-	uint32_t out_bitlen, out_nvals;
-	s_out -> get_clear_value_vec(&output_cls_cnt, &out_bitlen, &out_nvals);
-
-	model.setClassesCount(output_cls_cnt);
+	//s_out = circ -> PutOUTGate(s_out, ALL);
 
 
 	uint32_t** sum_attr_cnt = new uint32_t*[model.num_C];
 
+	vector<share*> s_attr_out;
 //  attribute probability computation
-	party -> Reset();
 	for(int i = 0 ; i < model.num_C; i++){
-		cout << "attr sum class: " << i << endl;
 		sum_attr_cnt[i] = new uint32_t[model.attr_nv];
-		vector<Sharing*>& sharings = party -> GetSharings () ;
-		Circuit * circ = sharings[S_YAO]->GetCircuitBuildRoutine() ;
-		cout << "got circ" << endl;
 
 		uint32_t nvals = model.attr_nv;
 		uint32_t* alice_attr = model.attributePerClass[i];
@@ -138,23 +127,33 @@ void secure_sum(NaiveBayesClassifer& model, e_role role){
 		cout << "got sb attrs" << endl;
 		share* s_out = circ -> PutADDGate(sa_attrs, sb_attrs);
 		cout << "add done" << endl;
-		s_out = circ -> PutOUTGate(s_out, ALL);
-		cout << "put to out gate done" << endl;
-		cout << "running circuit" << endl;
+		s_attr_out.push_back(s_out);
 
-		party -> ExecCircuit();
-		uint32_t out_bitlen, out_nvals;
-		s_out -> get_clear_value_vec(&(sum_attr_cnt[i]), &out_bitlen, &out_nvals);
+		// party -> ExecCircuit();
+		// uint32_t out_bitlen, out_nvals;
+		// s_out -> get_clear_value_vec(&(sum_attr_cnt[i]), &out_bitlen, &out_nvals);
 		
-		party -> Reset();
-		cout <<"finished, party reset"<<endl;
+	}
+
+
+	party -> ExecCircuit();
+	cout << "circ exected" << endl;
+	uint32_t* output_cls_cnt;
+	uint32_t out_bitlen, out_nvals;
+	s_out -> get_clear_value_vec(&output_cls_cnt, &out_bitlen, &out_nvals);
+
+	model.setClassesCount(output_cls_cnt);
+
+	for(int i = 0 ; i < model.num_C; i++){
+		uint32_t out_bitlen, out_nvals;
+		s_attr_out[i] -> get_clear_value_vec(&(sum_attr_cnt[i]), &out_bitlen, &out_nvals);
 	}
 	model.setAttrCount(sum_attr_cnt);
-
 
 	// vector<Sharing*>& sharings = party -> GetSharings () ;
 	// Circuit * circ = sharings[sharing]->GetCircuitBuildRoutine() ;
 
+	party -> Reset();
 	delete party;
 
 	return;
