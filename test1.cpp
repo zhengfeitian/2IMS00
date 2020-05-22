@@ -103,24 +103,17 @@ void secure_sum(NaiveBayesClassifer& model, e_role role){
 			count_bitlen, CLIENT);
 	share* sb_classes = circ -> PutSIMDINGate(model.num_C, bob_class,
 			count_bitlen, SERVER);
-	share* s_out = circ -> PutADDGate(sa_classes, sb_classes);
-	s_out = circ -> PutOUTGate(s_out, ALL);
-	party -> ExecCircuit();
+	share* s_cls = circ -> PutADDGate(sa_classes, sb_classes);
+	// s_out = circ -> PutOUTGate(s_out, ALL);
 
-	uint32_t out_bitlen, out_nvals, *output_cls_cnt;
-	s_out -> get_clear_value_vec(&output_cls_cnt, &out_bitlen, &out_nvals);
-	model.setClassesCount(output_cls_cnt);
+	// uint32_t out_bitlen, out_nvals, *output_cls_cnt;
+	// s_out -> get_clear_value_vec(&output_cls_cnt, &out_bitlen, &out_nvals);
 
 	uint32_t** sum_attr_cnt = new uint32_t*[model.num_C];
+	share* s_attrs;
 
 //  attribute probability computation
 	for(int i = 0 ; i < model.num_C; i++){
-		party -> Reset();
-		delete party;
-		ABYParty * party = new ABYParty ( role , ( char *) address.c_str() ,
-      	port , seclvl , bitlen , nthreads ) ;
-		vector<Sharing*>& sharings = party -> GetSharings () ;
-		Circuit * circ = sharings[sharing]->GetCircuitBuildRoutine() ;
 		sum_attr_cnt[i] = new uint32_t[model.attr_nv];
 
 		uint32_t nvals = model.attr_nv;
@@ -136,15 +129,27 @@ void secure_sum(NaiveBayesClassifer& model, e_role role){
 		cout << "got sb attrs" << endl;
 		share* s_out = circ -> PutADDGate(sa_attrs, sb_attrs);
 		cout << "add done" << endl;
-		s_out = circ -> PutOUTGate(s_out, ALL);
-
-		party -> ExecCircuit();
-		uint32_t out_bitlen, out_nvals;
-		s_out -> get_clear_value_vec(&(sum_attr_cnt[i]), &out_bitlen, &out_nvals);
-		
+		// s_out = circ -> PutOUTGate(s_out, ALL);
+		if (i == 0)
+			s_attrs = s_out;
+		else
+			s_attrs = circ -> PutCombinerGate(s_attrs, s_out);
 	}
+	uint32_t out_bitlen, out_nvals;
+	share* s_all = circ -> PutCombinerGate(s_cls, c_attrs);
+	s_all = circ -> PutOUTGate(s_all, ALL);
+	party -> ExecCircuit();
+
+	s_out -> get_clear_value_vec(&sum_attr_cnt, &out_bitlen, &out_nvals);
+	cout << "out_bitlen " << out_bitlen << endl;
+	cout << " out nvals " << out_nvals << endl;
+
+	
+
+	// s_out -> get_clear_value_vec(&(sum_attr_cnt[i]), &out_bitlen, &out_nvals);
 
 
+	// model.setClassesCount(output_cls_cnt);
 	model.setAttrCount(sum_attr_cnt);
 
 	// vector<Sharing*>& sharings = party -> GetSharings () ;
@@ -155,7 +160,6 @@ void secure_sum(NaiveBayesClassifer& model, e_role role){
 	return;
 	
 	// sum model.attributesPerClass
-	
 }
 
 int main(int argc, char** argv) {
