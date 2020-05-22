@@ -99,11 +99,12 @@ void secure_sum(NaiveBayesClassifer& model, e_role role){
 	uint32_t* bob_class =  model.classes; // place holder
 	uint32_t count_bitlen = 32;
 
-	share* sa_classes = circ -> PutSIMDINGate(model.num_C, alice_class,
-			count_bitlen, CLIENT);
-	share* sb_classes = circ -> PutSIMDINGate(model.num_C, bob_class,
-			count_bitlen, SERVER);
-	share* s_cls = circ -> PutADDGate(sa_classes, sb_classes);
+	// share* sa_classes = circ -> PutSIMDINGate(model.num_C, alice_class,
+	// 		count_bitlen, CLIENT);
+	// share* sb_classes = circ -> PutSIMDINGate(model.num_C, bob_class,
+	// 		count_bitlen, SERVER);
+	// share* s_cls = circ -> PutADDGate(sa_classes, sb_classes);
+
 	// s_out = circ -> PutOUTGate(s_out, ALL);
 
 	// uint32_t out_bitlen, out_nvals, *output_cls_cnt;
@@ -136,7 +137,8 @@ void secure_sum(NaiveBayesClassifer& model, e_role role){
 			s_attrs = circ -> PutCombinerGate(s_attrs, s_out);
 	}
 	uint32_t out_bitlen, out_nvals;
-	share* s_all = circ -> PutCombinerGate(s_cls, s_attrs);
+	// share* s_all = circ -> PutCombinerGate(s_cls, s_attrs);
+	share* s_all = s_attrs;
 	s_all = circ -> PutOUTGate(s_all, ALL);
 	party -> ExecCircuit();
 
@@ -150,7 +152,7 @@ void secure_sum(NaiveBayesClassifer& model, e_role role){
 
 
 	// model.setClassesCount(output_cls_cnt);
-	model.setAttrCount(sum_attr_cnt);
+	// model.setAttrCount(sum_attr_cnt);
 
 	// vector<Sharing*>& sharings = party -> GetSharings () ;
 	// Circuit * circ = sharings[sharing]->GetCircuitBuildRoutine() ;
