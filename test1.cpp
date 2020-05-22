@@ -104,14 +104,18 @@ void secure_sum(NaiveBayesClassifer& model, e_role role){
 	share* sb_classes = circ -> PutSIMDINGate(model.num_C, bob_class,
 			count_bitlen, SERVER);
 	share* s_out = circ -> PutADDGate(sa_classes, sb_classes);
-	//s_out = circ -> PutOUTGate(s_out, ALL);
-
+	s_out = circ -> PutOUTGate(s_out, ALL);
+	party -> ExecCircuit();
+	s_out -> get_clear_value_vec(&output_cls_cnt, &out_bitlen, &out_nvals);
+	model.setClassesCount(output_cls_cnt);
 
 	uint32_t** sum_attr_cnt = new uint32_t*[model.num_C];
 
-	vector<share*> s_attr_out;
 //  attribute probability computation
 	for(int i = 0 ; i < model.num_C; i++){
+		party -> Reset();
+		vector<Sharing*>& sharings = party -> GetSharings () ;
+		Circuit * circ = sharings[sharing]->GetCircuitBuildRoutine() ;
 		sum_attr_cnt[i] = new uint32_t[model.attr_nv];
 
 		uint32_t nvals = model.attr_nv;
@@ -127,33 +131,20 @@ void secure_sum(NaiveBayesClassifer& model, e_role role){
 		cout << "got sb attrs" << endl;
 		share* s_out = circ -> PutADDGate(sa_attrs, sb_attrs);
 		cout << "add done" << endl;
-		s_attr_out.push_back(s_out);
+		s_out = circ -> PutOUTGate(s_out, ALL);
 
-		// party -> ExecCircuit();
-		// uint32_t out_bitlen, out_nvals;
-		// s_out -> get_clear_value_vec(&(sum_attr_cnt[i]), &out_bitlen, &out_nvals);
+		party -> ExecCircuit();
+		uint32_t out_bitlen, out_nvals;
+		s_out -> get_clear_value_vec(&(sum_attr_cnt[i]), &out_bitlen, &out_nvals);
 		
 	}
 
 
-	party -> ExecCircuit();
-	cout << "circ exected" << endl;
-	uint32_t* output_cls_cnt;
-	uint32_t out_bitlen, out_nvals;
-	s_out -> get_clear_value_vec(&output_cls_cnt, &out_bitlen, &out_nvals);
-
-	model.setClassesCount(output_cls_cnt);
-
-	for(int i = 0 ; i < model.num_C; i++){
-		uint32_t out_bitlen, out_nvals;
-		s_attr_out[i] -> get_clear_value_vec(&(sum_attr_cnt[i]), &out_bitlen, &out_nvals);
-	}
 	model.setAttrCount(sum_attr_cnt);
 
 	// vector<Sharing*>& sharings = party -> GetSharings () ;
 	// Circuit * circ = sharings[sharing]->GetCircuitBuildRoutine() ;
 
-	party -> Reset();
 	delete party;
 
 	return;
