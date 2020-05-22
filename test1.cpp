@@ -136,11 +136,11 @@ void secure_sum(NaiveBayesClassifer& model, e_role role){
 			s_attrs = circ -> PutCombinerGate(s_attrs, s_out);
 	}
 	uint32_t out_bitlen, out_nvals;
-	share* s_all = circ -> PutCombinerGate(s_cls, c_attrs);
+	share* s_all = circ -> PutCombinerGate(s_cls, s_attrs);
 	s_all = circ -> PutOUTGate(s_all, ALL);
 	party -> ExecCircuit();
 
-	s_out -> get_clear_value_vec(&sum_attr_cnt, &out_bitlen, &out_nvals);
+	s_all -> get_clear_value_vec(&sum_attr_cnt, &out_bitlen, &out_nvals);
 	cout << "out_bitlen " << out_bitlen << endl;
 	cout << " out nvals " << out_nvals << endl;
 
