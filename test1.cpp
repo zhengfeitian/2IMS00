@@ -94,22 +94,29 @@ void secure_sum(NaiveBayesClassifer& model, e_role role){
 	vector<Sharing*>& sharings = party -> GetSharings () ;
 	Circuit * circ = sharings[sharing]->GetCircuitBuildRoutine() ;
 
-	uint32_t nvals = model.num_C;
-	uint32_t* alice_class = model.zip_ca
+	uint32_t nvals = model.num_C + model.num_C * model.attr_nv;
+	uint32_t* alice_class = model.zip_ca;
 	uint32_t* bob_class =  model.zip_ca; // place holder
 	uint32_t count_bitlen = 32;
 
-	share* sa_classes = circ -> PutSIMDINGate(model.num_C, alice_class,
+	share* sa_classes = circ -> PutSIMDINGate(nvals, alice_class,
 			count_bitlen, CLIENT);
-	share* sb_classes = circ -> PutSIMDINGate(model.num_C, bob_class,
+	share* sb_classes = circ -> PutSIMDINGate(nvals, bob_class,
 			count_bitlen, SERVER);
 	share* s_out = circ -> PutADDGate(sa_classes, sb_classes);
 
 	s_out = circ -> PutOUTGate(s_out, ALL);
 	uint32_t out_bitlen, out_nvals, *sum_zip;
 	party -> ExecCircuit();
-	s_all -> get_clear_value_vec(&sum_zip, &out_bitlen, &out_nvals);
+	s_out -> get_clear_value_vec(&sum_zip, &out_bitlen, &out_nvals);
+	cout << "out bit len" << out_bitlen << " out nvals " << out_nvals << endl;
+	for(int i = 0 ; i < out_nvals; i++){
+		cout << sum_zip[i] << " " ;
+	}
+	cout << endl;
 	model.set_zip(sum_zip);
+
+
 
 	// uint32_t out_bitlen, out_nvals, *output_cls_cnt;
 	// s_out -> get_clear_value_vec(&output_cls_cnt, &out_bitlen, &out_nvals);
