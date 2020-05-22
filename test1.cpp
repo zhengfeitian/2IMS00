@@ -106,6 +106,8 @@ void secure_sum(NaiveBayesClassifer& model, e_role role){
 	share* s_out = circ -> PutADDGate(sa_classes, sb_classes);
 	s_out = circ -> PutOUTGate(s_out, ALL);
 	party -> ExecCircuit();
+
+	uint32_t out_bitlen, out_nvals, *output_cls_cnt;
 	s_out -> get_clear_value_vec(&output_cls_cnt, &out_bitlen, &out_nvals);
 	model.setClassesCount(output_cls_cnt);
 
