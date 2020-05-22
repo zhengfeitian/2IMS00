@@ -114,33 +114,42 @@ void secure_sum(NaiveBayesClassifer& model, e_role role){
 	model.setClassesCount(output_cls_cnt);
 
 
-	uint32_t** sum_attr_cnt = new uint32_t[model.num_C];
+	uint32_t** sum_attr_cnt = new uint32_t*[model.num_C];
 
 //  attribute probability computation
 	party -> Reset();
 	for(int i = 0 ; i < model.num_C; i++){
-		sum_attr_cnt[i] = new int[model.attr_nv];
+		cout << "attr sum class: " << i << endl;
+		sum_attr_cnt[i] = new uint32_t[model.attr_nv];
 		vector<Sharing*>& sharings = party -> GetSharings () ;
-		Circuit * circ = sharings[sharing]->GetCircuitBuildRoutine() ;
+		Circuit * circ = sharings[S_YAO]->GetCircuitBuildRoutine() ;
+		cout << "got circ" << endl;
 
 		uint32_t nvals = model.attr_nv;
-		uint32_t* alice_attr = model.attributePerClass[i]
+		uint32_t* alice_attr = model.attributePerClass[i];
 		uint32_t* bob_attr =  model.attributePerClass[i];
 		uint32_t count_bitlen = 32;
 
 		share* sa_attrs = circ -> PutSIMDINGate(nvals, alice_attr,
 				count_bitlen, CLIENT);
+		cout << "got sa attrs" << endl;
 		share* sb_attrs = circ -> PutSIMDINGate(nvals, bob_attr,
 				count_bitlen, SERVER);
-		share* s_out = circ -> PutADDGate(sa_attr, sb_attr);
+		cout << "got sb attrs" << endl;
+		share* s_out = circ -> PutADDGate(sa_attrs, sb_attrs);
+		cout << "add done" << endl;
 		s_out = circ -> PutOUTGate(s_out, ALL);
+		cout << "put to out gate done" << endl;
+		cout << "running circuit" << endl;
 
 		party -> ExecCircuit();
 		uint32_t out_bitlen, out_nvals;
 		s_out -> get_clear_value_vec(&(sum_attr_cnt[i]), &out_bitlen, &out_nvals);
 		
 		party -> Reset();
+		cout <<"finished, party reset"<<endl;
 	}
+	model.setAttrCount(sum_attr_cnt);
 
 
 	// vector<Sharing*>& sharings = party -> GetSharings () ;
