@@ -17,6 +17,7 @@ class NaiveBayesClassifer
 	uint32_t num_C = 0;
 	uint32_t num_attr = 0;
 	uint32_t attr_nv = 0;
+	uint32_t* zip_ca = nullptr;
 	// <class id, <attribute id, probability>> <C, <x, P(x|C)>>
 	unordered_map<int, unordered_map<int, double>> attr_prob;
 	uint32_t** attributePerClass = nullptr; //class_id, attr_id, count
@@ -33,6 +34,7 @@ class NaiveBayesClassifer
 			memset(attributePerClass[i], 0, attr_nv * sizeof(uint32_t));
 		}
 
+		zip_ca = new uint32_t[num_C+num_C*attr_nv];
 	
 	// start training
 	// count all classes and attributes
@@ -84,6 +86,28 @@ class NaiveBayesClassifer
 			cout<<"Class P(C="<<seg.first<< ") = "<<classes[seg.first]<<endl;
 		}
 		*/
+	}
+	void zip_all_count(){
+		for(int i = 0 ; i < num_C; i++){
+			zip_ca[i] = classes[i];
+		}
+		int ind = num_C;
+		for(int i = 0 ; i < num_C; i++){
+			for(int j = 0 ; j < attr_nv; j++){
+				zip_ca[ind] = attributePerClass[i][j];
+				++ind;
+			}
+		}
+	}
+	void set_zip(uint32_t a[]){
+		setClassesCount(a);
+		int ind = num_C;
+		for(int i = 0 ; i < num_C; i++){
+			for(int j = 0 ; j < attr_nv; j++){
+				attributePerClass[i][j] = zip_ca[ind];
+				++ind;
+			}
+		}
 	}
 	void setClassesCount(uint32_t* sum_classes){
 		for(int i = 0 ; i < num_C; i++){
