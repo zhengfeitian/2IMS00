@@ -116,6 +116,9 @@ void secure_sum(NaiveBayesClassifer& model, e_role role){
 //  attribute probability computation
 	for(int i = 0 ; i < model.num_C; i++){
 		party -> Reset();
+		delete party;
+		ABYParty * party = new ABYParty ( role , ( char *) address.c_str() ,
+      	port , seclvl , bitlen , nthreads ) ;
 		vector<Sharing*>& sharings = party -> GetSharings () ;
 		Circuit * circ = sharings[sharing]->GetCircuitBuildRoutine() ;
 		sum_attr_cnt[i] = new uint32_t[model.attr_nv];
