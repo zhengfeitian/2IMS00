@@ -118,32 +118,6 @@ void secure_sum(NaiveBayesClassifer& model, e_role role){
 	cout << endl;
 	model.set_zip(sum_zip);
 
-
-
-	// uint32_t out_bitlen, out_nvals, *output_cls_cnt;
-	// s_out -> get_clear_value_vec(&output_cls_cnt, &out_bitlen, &out_nvals);
-
-	// uint32_t* sum_attr_cnt = new uint32_t[model.num_C * model.attr_nv];
-
-//  attribute probability computation
-	// share* s_all = circ -> PutCombinerGate(s_cls, s_attrs);
-	// share* s_all = s_attrs;
-	// s_all = circ -> PutOUTGate(s_all, ALL);
-
-	// cout << "out_bitlen " << out_bitlen << endl;
-	// cout << " out nvals " << out_nvals << endl;
-
-	
-
-	// s_out -> get_clear_value_vec(&(sum_attr_cnt[i]), &out_bitlen, &out_nvals);
-
-
-	// model.setClassesCount(output_cls_cnt);
-	// model.setAttrCount(sum_attr_cnt);
-
-	// vector<Sharing*>& sharings = party -> GetSharings () ;
-	// Circuit * circ = sharings[sharing]->GetCircuitBuildRoutine() ;
-
 	party -> Reset();
 	delete party;
 
@@ -171,5 +145,6 @@ int main(int argc, char** argv) {
 	
 	
 	secure_sum(model,role);
+	model.calProbability();
 	return 0;
 }

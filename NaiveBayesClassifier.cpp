@@ -137,15 +137,19 @@ class NaiveBayesClassifer
 			cout << endl;
 	}
 	void calProbability(){
+		cout << "calculating probability "<< endl;
 		int total_classes = 0;
 		for(int i = 0 ; i < num_C; i++){
 			total_classes += classes[i];
 		}
+		cout <<"printing attribute probability"<< endl;
 		for(int i=0; i<num_C; i++){
 			classes_prob[i] = classes[i]/double(total_classes);
 			for(int j=0; j < attr_nv; j++){
 				attr_prob[i][j] = attributePerClass[i][j]/double(classes[i]);
+				cout << attr_prob[i][j] << " ";
 			}
+			cout << endl;
 		}
 	}
 	// predict class with attributes vector< attribute id>
