@@ -26,7 +26,8 @@ using namespace std;
 
 int32_t read_test_options(int32_t* argcp, char*** argvp, e_role* role,
 				uint32_t* bitlen, uint32_t* nvals, uint32_t* secparam, string* address,
-						uint16_t* port, int32_t* test_op, string* file_name) {
+						uint16_t* port, int32_t* test_op, string* file_name, 
+						string* cls_file, string* attr_file) {
 
 	uint32_t int_role = 0, int_port = 0;
 
@@ -42,6 +43,10 @@ int32_t read_test_options(int32_t* argcp, char*** argvp, e_role* role,
 		{ (void*) test_op, T_NUM, "t", "Single test (leave out for all operations), default: off",
 						false, false },
 		{(void*) file_name, T_STR, "f", "Training data file, default: train_all.txt",
+						false,false},
+		{(void*) cls_file, T_STR, "cf", "Class data file, default: None",
+						false,false},
+		{(void*) attr_file, T_STR, "af", "Attribute data file, default: None",
 						false,false}};
 
 	if (!parse_options(argcp, argvp, options,	sizeof(options) / sizeof(parsing_ctx))) {
@@ -64,6 +69,20 @@ int32_t read_test_options(int32_t* argcp, char*** argvp, e_role* role,
 }
 
 
+NaiveBayesClassifer train_model(string filename, string cls_file, string attr_file){
+	unordered_map<string, int> classmap;
+	vector<unordered_map<string, int>> attrimap;
+	vector<vector<int>> data;
+	int C = read_classmap(classmap, cls_file);
+	int attr_values_cnt = read_attrmap(attrimap,attr_file);
+	read_data(data, filename, classmap, attrimap);
+	
+	// random_shuffle(data.begin(),data.end());
+
+	// train model
+	NaiveBayesClassifer model(data, attrimap.size(), classmap.size(), attr_values_cnt);
+	return model;
+} 
 NaiveBayesClassifer train_model(string filename="train_s.txt"){
 	unordered_map<string, int> classmap = {{"apple", 0}, {"pineapple", 1}, {"cherry", 2}};
 	unordered_map<string, int> attrimap =
@@ -135,9 +154,10 @@ int main(int argc, char** argv) {
 	int32_t test_op = -1;
 	e_mt_gen_alg mt_alg = MT_OT;
 	string file_name = "train_s.txt";
+	string attr_file, cls_file;
 
 	read_test_options(&argc, &argv, &role, &bitlen, &nvals, &secparam, &address,
-						&port, &test_op, &file_name);
+						&port, &test_op, &file_name, &cls_file, &attr_file);
 
 	NaiveBayesClassifer model = train_model(file_name);
 	//test_millionaire_prob_circuit(role, address, port, seclvl, 32,
