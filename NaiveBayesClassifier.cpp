@@ -185,6 +185,46 @@ void populateData(vector<vector<int>> &data, unordered_map<string, int> &classma
 	return;
 
 }
+
+void populateData(vector<vector<int>>& data, unordered_map<string, int>& classmap,
+	vector<unordered_map<string, int>> attrimap,
+	string c, vector<string> attrs)
+{
+	vector<int> apair;// = { classmap[c],attrimap[a1], attrimap[a2] };
+	apair.push_back(classmap[c]);
+	int attr_values_num = 0;
+	for (int i = 0; i < attrs.size(); i++) {
+		apair.push_back(attr_values_num + attrimap[i][attrs[i]]);
+		attr_values_num += attrimap[i].size();
+	}
+	vector<vector<int>> newarr(1, apair);
+	data.insert(data.end(), newarr.begin(), newarr.end());
+	cout << "data size: " << data.size() << endl;
+	return;
+}
+
+void read_data(vector<vector<int>>& data, string filename, unordered_map<string, int>& classmap,
+	vector<unordered_map<string, int>>& attrimap) {
+	ifstream in(filename);
+	if (!in)
+	{
+		cerr << "Cannot open the File : " << filename << std::endl;
+		return;
+	}
+	string c, line, attr;
+	cout << "reading files" << endl;
+	while (getline(in, line)) {
+		istringstream iss(line);
+		iss >> c;
+		vector<string> attrs;
+		while (iss >> attr) {
+			attrs.push_back(attr);
+		}
+		populateData(data, classmap, attrimap, c, attrs);
+	}
+	cout << "data construction finished" << endl;
+
+}
 	
 void read_data(vector<vector<int>>& data, string filename,unordered_map<string,int> & classmap, 
 	unordered_map<string,int> & attrimap) {
@@ -203,6 +243,47 @@ void read_data(vector<vector<int>>& data, string filename,unordered_map<string,i
 	cout << "data construction finished" << endl;
 }
 
+int read_classmap(unordered_map<string, int>& classmap, string filename) {
+	ifstream in(filename);
+	if (!in)
+	{
+		cerr << "Cannot open the File : " << filename << std::endl;
+		return -1;
+	}
+	cout << "reading class map" << endl;
+	string cls;
+	int cnt = 0;
+	while (in >> cls) {
+		classmap[cls] = cnt;
+		cnt++;
+	}
+	return cnt;
+}
+int read_attrmap(vector<unordered_map<string, int>>& attrmap, string filename) {
+	ifstream in(filename);
+	if (!in)
+	{
+		cerr << "Cannot open the File : " << filename << std::endl;
+		return -1;
+	}
+	cout << "reading attribute map" << endl;
+	string att;
+	int num_attr = 0;
+	string line;
+	int attr_values_cnt = 0;
+	while (getline(in, line)) {
+		int cnt = 0;
+		unordered_map<string, int> a_map;
+		istringstream iss(line);
+		while (iss >> att) {
+			a_map[att] = cnt;
+			++cnt;
+			++attr_values_cnt;
+		}
+		attrmap.push_back(a_map);
+	}
+	return attr_values_cnt;
+}
 /*
 int main() {
 	// prepare a training dataset with 2 attributes and 3 classes
