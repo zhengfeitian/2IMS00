@@ -17,6 +17,7 @@ class NaiveBayesClassifer
 	uint32_t num_C = 0;
 	uint32_t num_attr = 0;
 	uint32_t attr_nv = 0;
+	uint32_t* zip_ca = nullptr;
 	// <class id, <attribute id, probability>> <C, <x, P(x|C)>>
 	unordered_map<int, unordered_map<int, double>> attr_prob;
 	uint32_t** attributePerClass = nullptr; //class_id, attr_id, count
@@ -33,6 +34,7 @@ class NaiveBayesClassifer
 			memset(attributePerClass[i], 0, attr_nv * sizeof(uint32_t));
 		}
 
+		zip_ca = new uint32_t[num_C+num_C*attr_nv];
 	
 	// start training
 	// count all classes and attributes
@@ -65,6 +67,11 @@ class NaiveBayesClassifer
 				}
 			}
 		}
+		cout << "In constructor classes count set: " << endl;
+		for(int i = 0 ; i < num_C; i++){
+			cout << classes[i] << " ";
+		}
+		cout << endl;
 	// calculate probility per class and per attribute
 		/*
 		for(auto seg: attributePerClass)
@@ -79,11 +86,39 @@ class NaiveBayesClassifer
 			cout<<"Class P(C="<<seg.first<< ") = "<<classes[seg.first]<<endl;
 		}
 		*/
+		zip_all_count();
+	}
+	void zip_all_count(){
+		for(int i = 0 ; i < num_C; i++){
+			zip_ca[i] = classes[i];
+		}
+		int ind = num_C;
+		for(int i = 0 ; i < num_C; i++){
+			for(int j = 0 ; j < attr_nv; j++){
+				zip_ca[ind] = attributePerClass[i][j];
+				++ind;
+			}
+		}
+	}
+	void set_zip(uint32_t a[]){
+		setClassesCount(a);
+		int ind = num_C;
+		for(int i = 0 ; i < num_C; i++){
+			for(int j = 0 ; j < attr_nv; j++){
+				attributePerClass[i][j] = zip_ca[ind];
+				++ind;
+			}
+		}
 	}
 	void setClassesCount(uint32_t* sum_classes){
 		for(int i = 0 ; i < num_C; i++){
-			classes[i] = sum_classes;
+			classes[i] = sum_classes[i];
 		}
+		cout << "classes count set: " << endl;
+		for(int i = 0 ; i < num_C; i++){
+			cout << classes[i] << " ";
+		}
+		cout << endl;
 	}
 	void setAttrCount(uint32_t** sum_attr){
 		for(int i=0; i<num_C; i++){
@@ -91,17 +126,30 @@ class NaiveBayesClassifer
 				attributePerClass[i][j] = sum_attr[i][j];
 			}
 		}
+		cout << "attr count set: " << endl;
+		for(int i=0; i<num_C; i++){
+			for(int j=0; j<attr_nv; j++){
+				attributePerClass[i][j] = sum_attr[i][j];
+				cout << attributePerClass[i][j] <<  " ";
+			}
+			cout << endl;
+		}
+			cout << endl;
 	}
 	void calProbability(){
-		int total_classes = 0
+		cout << "calculating probability "<< endl;
+		int total_classes = 0;
 		for(int i = 0 ; i < num_C; i++){
 			total_classes += classes[i];
 		}
+		cout <<"printing attribute probability"<< endl;
 		for(int i=0; i<num_C; i++){
-			classes_prob[i] = classes[i]/total_classes;
+			classes_prob[i] = classes[i]/double(total_classes);
 			for(int j=0; j < attr_nv; j++){
-				attr_prob[i][j] = attributePerClass[i][j]/classes[i];
+				attr_prob[i][j] = attributePerClass[i][j]/double(classes[i]);
+				cout << attr_prob[i][j] << " ";
 			}
+			cout << endl;
 		}
 	}
 	// predict class with attributes vector< attribute id>
@@ -155,6 +203,7 @@ void read_data(vector<vector<int>>& data, string filename,unordered_map<string,i
 	cout << "data construction finished" << endl;
 }
 
+/*
 int main() {
 	// prepare a training dataset with 2 attributes and 3 classes
 	unordered_map<string, int> classmap = {{"apple", 0}, {"pineapple", 1}, {"cherry", 2}};
@@ -182,7 +231,9 @@ int main() {
 	}
 	cout << endl;
 	// predict with model
-	//int cls = mymodel.predict({attrimap["red"],attrimap["heart"]});
+	mymodel.calProbability();
+	int cls = mymodel.predict({attrimap["red"],attrimap["heart"]});
 	//cout<<"Predicted class "<< cls <<endl;
 	return 0;
 }
+*/
