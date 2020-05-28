@@ -3,7 +3,7 @@
 #include <vector>
 #include <iostream>
 #include <fstream>
-#include <unordered_map>
+#include <map>
 #include <cstdlib>
 #include <sstream>
 #include <stdio.h>  // defines FILENAME_MAX
@@ -15,14 +15,14 @@ class NaiveBayesClassifer
 {
 	public:
 	// <class id, class probility> <C, P(C)>
-	unordered_map<int,double> classes_prob;
+	map<int,double> classes_prob;
 	uint32_t* classes = nullptr;
 	uint32_t num_C = 0;
 	uint32_t num_attr = 0;
 	uint32_t attr_nv = 0;
 	uint32_t* zip_ca = nullptr;
 	// <class id, <attribute id, probability>> <C, <x, P(x|C)>>
-	unordered_map<int, unordered_map<int, double>> attr_prob;
+	map<int, map<int, double>> attr_prob;
 	uint32_t** attributePerClass = nullptr; //class_id, attr_id, count
 	// input: vector< pair < class id, attribute id>> , DimSize is the number of attributes
 	NaiveBayesClassifer(vector<vector<int>> &data, int DimSize, int C,int attr_nv):
@@ -49,7 +49,7 @@ class NaiveBayesClassifer
 				cout << "classes error" << endl;
 				exit(1);
 				//classes[entry[0]]=1;
-				//unordered_map<int, double> pxc;
+				//map<int, double> pxc;
 				//attributesPerClass[entry[0]] = pxc;
 			}
 			else{
@@ -181,8 +181,8 @@ class NaiveBayesClassifer
 		return maxcid;
 	}
 };
-void populateData(vector<vector<int>>& data, unordered_map<string, int>& classmap,
-	vector<unordered_map<string, int>> attrimap,
+void populateData(vector<vector<int>>& data, map<string, int>& classmap,
+	vector<map<string, int>> attrimap,
 	string c, vector<string> attrs)
 {
 	vector<int> apair;// = { classmap[c],attrimap[a1], attrimap[a2] };
@@ -200,8 +200,8 @@ void populateData(vector<vector<int>>& data, unordered_map<string, int>& classma
 }
 
 
-void read_data(vector<vector<int>>& data, string filename, unordered_map<string, int>& classmap,
-	vector<unordered_map<string, int>>& attrimap) {
+void read_data(vector<vector<int>>& data, string filename, map<string, int>& classmap,
+	vector<map<string, int>>& attrimap) {
 	ifstream in(filename);
 	if (!in)
 	{
@@ -224,8 +224,8 @@ void read_data(vector<vector<int>>& data, string filename, unordered_map<string,
 }
 	
 /*
-edoid read_data(vector<vector<int>>& data, string filename,unordered_map<string,int> & classmap, 
-	unordered_map<string,int> & attrimap) {
+edoid read_data(vector<vector<int>>& data, string filename,map<string,int> & classmap, 
+	map<string,int> & attrimap) {
 	ifstream in(filename);
 	if (!in)
 	{
@@ -241,7 +241,7 @@ edoid read_data(vector<vector<int>>& data, string filename,unordered_map<string,
 	cout << "data construction finished" << endl;
 }
 */
-int read_classmap(unordered_map<string, int>& classmap, string filename) {
+int read_classmap(map<string, int>& classmap, string filename) {
 	ifstream in(filename);
 	if (!in)
 	{
@@ -258,7 +258,7 @@ int read_classmap(unordered_map<string, int>& classmap, string filename) {
 	return cnt;
 }
 
-int read_attrmap(vector<unordered_map<string, int>>& attrmap, string filename) {
+int read_attrmap(vector<map<string, int>>& attrmap, string filename) {
 	ifstream in(filename);
 	if (!in)
 	{
@@ -272,7 +272,7 @@ int read_attrmap(vector<unordered_map<string, int>>& attrmap, string filename) {
 	int attr_values_cnt = 0;
 	while (getline(in, line)) {
 		int cnt = 0;
-		unordered_map<string, int> a_map;
+		map<string, int> a_map;
 		istringstream iss(line);
 		while (iss >> att) {
 			a_map[att] = cnt;
@@ -286,9 +286,9 @@ int read_attrmap(vector<unordered_map<string, int>>& attrmap, string filename) {
 /*
 int main() {
 	// prepare a training dataset with 2 attributes and 3 classes
-	unordered_map<string, int> classmap;
+	map<string, int> classmap;
 	vector<vector<int>> data;
-	vector<unordered_map<string, int>> attr_maps;
+	vector<map<string, int>> attr_maps;
 	//string attr_file = "L:\\learning\\academy\\TUeM1\\Q4\\Seminar\\just_nb\\nb\\nb\\data\\balance_scale\\balance-scale.attrs";
 	//string cls_file = "L:\\learning\\academy\\TUeM1\\Q4\\Seminar\\just_nb\\nb\\nb\\data\\balance_scale\\balance-scale.class";
 	//string d_file = "L:\\learning\\academy\\TUeM1\\Q4\\Seminar\\just_nb\\nb\\nb\\data\\balance_scale\\balance-scale-client.data";
@@ -304,8 +304,8 @@ int main() {
 	return 0;
 	/*
 	//read_classmap("data/")
-	//unordered_map<string, int> classmap = {{"apple", 0}, {"pineapple", 1}, {"cherry", 2}};
-	//unordered_map<string, int> attrimap =
+	//map<string, int> classmap = {{"apple", 0}, {"pineapple", 1}, {"cherry", 2}};
+	//map<string, int> attrimap =
 	// color
 	//{{"red", 0}, {"green", 1}, {"yellow", 2},
 	// shape
