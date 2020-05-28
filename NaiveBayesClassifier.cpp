@@ -109,7 +109,8 @@ class NaiveBayesClassifer
 		cout << endl << "setting attribute in set_zip" << endl;
 		for(int i = 0 ; i < num_C; i++){
 			for(int j = 0 ; j < attr_nv; j++){
-				attributePerClass[i][j] = zip_ca[ind];
+				//attributePerClass[i][j] = zip_ca[ind];
+				attributePerClass[i][j] = a[ind];
 				cout << attributePerClass[i][j] << " ";
 				++ind;
 			}
