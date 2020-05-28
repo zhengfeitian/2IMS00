@@ -15,7 +15,7 @@
 #include <algorithm>
 #include <vector>
 #include <fstream>
-#include <unordered_map>
+#include <map>
 #include <cstdlib>
 
 using namespace std;
@@ -70,8 +70,8 @@ int32_t read_test_options(int32_t* argcp, char*** argvp, e_role* role,
 
 
 NaiveBayesClassifer train_model(string filename, string cls_file, string attr_file){
-	unordered_map<string, int> classmap;
-	vector<unordered_map<string, int>> attrimap;
+	map<string, int> classmap;
+	vector<map<string, int>> attrimap;
 	vector<vector<int>> data;
 	int C = read_classmap(classmap, cls_file);
 	int attr_values_cnt = read_attrmap(attrimap,attr_file);
@@ -85,8 +85,8 @@ NaiveBayesClassifer train_model(string filename, string cls_file, string attr_fi
 } 
 /*
 NaiveBayesClassifer train_model(string filename="train_s.txt"){
-	unordered_map<string, int> classmap = {{"apple", 0}, {"pineapple", 1}, {"cherry", 2}};
-	unordered_map<string, int> attrimap =
+	map<string, int> classmap = {{"apple", 0}, {"pineapple", 1}, {"cherry", 2}};
+	map<string, int> attrimap =
 	// color
 	{{"red", 0}, {"green", 1}, {"yellow", 2},
 	// shape
@@ -102,8 +102,8 @@ NaiveBayesClassifer train_model(string filename="train_s.txt"){
 } 
 */
 /*
-void read_data(vector<vector<int>>& data, string filename, unordered_map<string, int>& classmap,
-			vector<unordered_map<string, int>>& attrimap) {
+void read_data(vector<vector<int>>& data, string filename, map<string, int>& classmap,
+			vector<map<string, int>>& attrimap) {
 	ifstream in(filename);
 	if (!in)
 	{
