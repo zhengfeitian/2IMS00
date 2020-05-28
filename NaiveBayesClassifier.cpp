@@ -7,7 +7,6 @@
 #include <cstdlib>
 #include <sstream>
 #include <stdio.h>  // defines FILENAME_MAX
-#include <windows.h>
 #include <filesystem>
 
 using namespace std;
@@ -130,15 +129,6 @@ class NaiveBayesClassifer
 	}
 };
 
-void populateData(vector<vector<int>> &data, unordered_map<string, int> &classmap, unordered_map<string, int> &attrimap,
-	string c, string a1, string a2, int K=1)
-{
-	vector<int> apair = {classmap[c],attrimap[a1], attrimap[a2]};
-	vector<vector<int>> newarr(K, apair);
-	data.insert(data.end(), newarr.begin(), newarr.end());
-	cout << "data size: " << data.size() << endl;
-	return;
-}
 void populateData(vector<vector<int>>& data, unordered_map<string, int>& classmap,
 	vector<unordered_map<string, int>> attrimap,
 	string c, vector<string> attrs)
@@ -156,46 +146,7 @@ void populateData(vector<vector<int>>& data, unordered_map<string, int>& classma
 	return;
 
 }
-void read_data(vector<vector<int>>& data, string filename, unordered_map<string, int>& classmap,
-	vector<unordered_map<string, int>>& attrimap) {
-	ifstream in(filename);
-	if (!in)
-	{
-		cerr << "Cannot open the File : " << filename << std::endl;
-		return;
-	}
-	string c, line, attr;
-	int k;
-	cout << "reading files" << endl;
-	while (getline(in, line)) {
-		istringstream iss(line);
-		iss >> c;
-		vector<string> attrs;
-		while (iss >> attr) {
-			attrs.push_back(attr);
-		}
-		populateData(data, classmap, attrimap, c, attrs);
-	}
-	cout << "data construction finished" << endl;
 
-}
-
-void populateData(vector<vector<int>>& data, unordered_map<string, int>& classmap,
-	vector<unordered_map<string, int>> attrimap,
-	string c, vector<string> attrs)
-{
-	vector<int> apair;// = { classmap[c],attrimap[a1], attrimap[a2] };
-	apair.push_back(classmap[c]);
-	int attr_values_num = 0;
-	for (int i = 0; i < attrs.size(); i++) {
-		apair.push_back(attr_values_num + attrimap[i][attrs[i]]);
-		attr_values_num += attrimap[i].size();
-	}
-	vector<vector<int>> newarr(1, apair);
-	data.insert(data.end(), newarr.begin(), newarr.end());
-	cout << "data size: " << data.size() << endl;
-	return;
-}
 
 void read_data(vector<vector<int>>& data, string filename, unordered_map<string, int>& classmap,
 	vector<unordered_map<string, int>>& attrimap) {
@@ -220,6 +171,7 @@ void read_data(vector<vector<int>>& data, string filename, unordered_map<string,
 
 }
 	
+/*
 void read_data(vector<vector<int>>& data, string filename,unordered_map<string,int> & classmap, 
 	unordered_map<string,int> & attrimap) {
 	ifstream in(filename);
@@ -236,6 +188,7 @@ void read_data(vector<vector<int>>& data, string filename,unordered_map<string,i
 	}
 	cout << "data construction finished" << endl;
 }
+*/
 int read_classmap(unordered_map<string, int>& classmap, string filename) {
 	ifstream in(filename);
 	if (!in)
@@ -253,22 +206,6 @@ int read_classmap(unordered_map<string, int>& classmap, string filename) {
 	return cnt;
 }
 
-int read_classmap(unordered_map<string, int>& classmap, string filename) {
-	ifstream in(filename);
-	if (!in)
-	{
-		cerr << "Cannot open the File : " << filename << std::endl;
-		return -1;
-	}
-	cout << "reading class map" << endl;
-	string cls;
-	int cnt = 0;
-	while (in >> cls) {
-		classmap[cls] = cnt;
-		cnt++;
-	}
-	return cnt;
-}
 int read_attrmap(vector<unordered_map<string, int>>& attrmap, string filename) {
 	ifstream in(filename);
 	if (!in)
@@ -344,5 +281,5 @@ int main() {
 	int cls = mymodel.predict({attrimap["red"],attrimap["heart"]});
 	//cout<<"Predicted class "<< cls <<endl;
 	return 0;
-	*/
 }
+	*/

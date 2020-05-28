@@ -159,7 +159,7 @@ int main(int argc, char** argv) {
 	read_test_options(&argc, &argv, &role, &bitlen, &nvals, &secparam, &address,
 						&port, &test_op, &file_name, &cls_file, &attr_file);
 
-	NaiveBayesClassifer model = train_model(file_name);
+	NaiveBayesClassifer model = train_model(file_name, cls_file, attr_file);
 	//test_millionaire_prob_circuit(role, address, port, seclvl, 32,
 	//				nthreads, mt_alg, S_YAO);
 	
