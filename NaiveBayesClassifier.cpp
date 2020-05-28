@@ -5,12 +5,9 @@
 #include <fstream>
 #include <unordered_map>
 #include <cstdlib>
-#include <sstream>
-#include <stdio.h>  // defines FILENAME_MAX
-#include <windows.h>
-#include <filesystem>
 
 using namespace std;
+
 class NaiveBayesClassifer
 {
 	public:
@@ -85,7 +82,7 @@ class NaiveBayesClassifer
 	}
 	void setClassesCount(uint32_t* sum_classes){
 		for(int i = 0 ; i < num_C; i++){
-			classes[i] = sum_classes[i];
+			classes[i] = sum_classes;
 		}
 	}
 	void setAttrCount(uint32_t** sum_attr){
@@ -96,14 +93,14 @@ class NaiveBayesClassifer
 		}
 	}
 	void calProbability(){
-		int total_classes = 0;
+		int total_classes = 0
 		for(int i = 0 ; i < num_C; i++){
 			total_classes += classes[i];
 		}
 		for(int i=0; i<num_C; i++){
-			classes_prob[i] = classes[i]/double(total_classes);
+			classes_prob[i] = classes[i]/total_classes;
 			for(int j=0; j < attr_nv; j++){
-				attr_prob[i][j] = attributePerClass[i][j]/double(classes[i]);
+				attr_prob[i][j] = attributePerClass[i][j]/classes[i];
 			}
 		}
 	}
@@ -131,52 +128,13 @@ class NaiveBayesClassifer
 };
 
 void populateData(vector<vector<int>> &data, unordered_map<string, int> &classmap, unordered_map<string, int> &attrimap,
-	string c, string a1, string a2, int K=1)
+	string c, string a1, string a2, int K)
 {
 	vector<int> apair = {classmap[c],attrimap[a1], attrimap[a2]};
 	vector<vector<int>> newarr(K, apair);
 	data.insert(data.end(), newarr.begin(), newarr.end());
 	cout << "data size: " << data.size() << endl;
 	return;
-}
-void populateData(vector<vector<int>>& data, unordered_map<string, int>& classmap,
-	vector<unordered_map<string, int>> attrimap,
-	string c, vector<string> attrs)
-{
-	vector<int> apair;// = { classmap[c],attrimap[a1], attrimap[a2] };
-	apair.push_back(classmap[c]);
-	int attr_values_num = 0;
-	for (int i = 0; i < attrs.size(); i++) {
-		apair.push_back(attr_values_num + attrimap[i][attrs[i]]);
-		attr_values_num += attrimap[i].size();
-	}
-	vector<vector<int>> newarr(1, apair);
-	data.insert(data.end(), newarr.begin(), newarr.end());
-	cout << "data size: " << data.size() << endl;
-	return;
-
-}
-void read_data(vector<vector<int>>& data, string filename, unordered_map<string, int>& classmap,
-	vector<unordered_map<string, int>>& attrimap) {
-	ifstream in(filename);
-	if (!in)
-	{
-		cerr << "Cannot open the File : " << filename << std::endl;
-		return;
-	}
-	string c, line, attr;
-	int k;
-	cout << "reading files" << endl;
-	while (getline(in, line)) {
-		istringstream iss(line);
-		iss >> c;
-		vector<string> attrs;
-		while (iss >> attr) {
-			attrs.push_back(attr);
-		}
-		populateData(data, classmap, attrimap, c, attrs);
-	}
-	cout << "data construction finished" << endl;
 
 }
 	
@@ -196,76 +154,17 @@ void read_data(vector<vector<int>>& data, string filename,unordered_map<string,i
 	}
 	cout << "data construction finished" << endl;
 }
-int read_classmap(unordered_map<string, int>& classmap, string filename) {
-	ifstream in(filename);
-	if (!in)
-	{
-		cerr << "Cannot open the File : " << filename << std::endl;
-		return -1;
-	}
-	cout << "reading class map" << endl;
-	string cls;
-	int cnt = 0;
-	while (in >> cls) {
-		classmap[cls] = cnt;
-		cnt++;
-	}
-	return cnt;
-}
 
-int read_attrmap(vector<unordered_map<string, int>>& attrmap, string filename) {
-	ifstream in(filename);
-	if (!in)
-	{
-		cerr << "Cannot open the File : " << filename << std::endl;
-		return -1;
-	}
-	cout << "reading attribute map" << endl;
-	string att;
-	int num_attr = 0;
-	string line;
-	int attr_values_cnt = 0;
-	while (getline(in, line)) {
-		int cnt = 0;
-		unordered_map<string, int> a_map;
-		istringstream iss(line);
-		while (iss >> att) {
-			a_map[att] = cnt;
-			++cnt;
-			++attr_values_cnt;
-		}
-		attrmap.push_back(a_map);
-	}
-	return attr_values_cnt;
-}
 int main() {
 	// prepare a training dataset with 2 attributes and 3 classes
-	unordered_map<string, int> classmap;
-	vector<vector<int>> data;
-	vector<unordered_map<string, int>> attr_maps;
-	//string attr_file = "L:\\learning\\academy\\TUeM1\\Q4\\Seminar\\just_nb\\nb\\nb\\data\\balance_scale\\balance-scale.attrs";
-	//string cls_file = "L:\\learning\\academy\\TUeM1\\Q4\\Seminar\\just_nb\\nb\\nb\\data\\balance_scale\\balance-scale.class";
-	//string d_file = "L:\\learning\\academy\\TUeM1\\Q4\\Seminar\\just_nb\\nb\\nb\\data\\balance_scale\\balance-scale-client.data";
-	string attr_file = "L:\\learning\\academy\\TUeM1\\Q4\\Seminar\\just_nb\\nb\\nb\\data\\breast_cancer\\breast-cancer.attrs";
-	string cls_file = "L:\\learning\\academy\\TUeM1\\Q4\\Seminar\\just_nb\\nb\\nb\\data\\breast_cancer\\breat-cancer.class";
-	string d_file = "L:\\learning\\academy\\TUeM1\\Q4\\Seminar\\just_nb\\nb\\nb\\data\\breast_cancer\\breast-cancer-client.data";
-	int attr_values_cnt = read_attrmap(attr_maps,attr_file);
-	int C = read_classmap(classmap, cls_file);
-	read_data(data, d_file, classmap, attr_maps);
-
-	NaiveBayesClassifer mymodel(data, attr_maps.size(),classmap.size(), attr_values_cnt);
-
-	return 0;
-	/*
-	//read_classmap("data/")
-	//unordered_map<string, int> classmap = {{"apple", 0}, {"pineapple", 1}, {"cherry", 2}};
-	//unordered_map<string, int> attrimap =
+	unordered_map<string, int> classmap = {{"apple", 0}, {"pineapple", 1}, {"cherry", 2}};
+	unordered_map<string, int> attrimap =
 	// color
-	//{{"red", 0}, {"green", 1}, {"yellow", 2},
+	{{"red", 0}, {"green", 1}, {"yellow", 2},
 	// shape
-	//{"round", 3}, {"oval", 4}, {"heart", 5}};
+	{"round", 3}, {"oval", 4}, {"heart", 5}};
 	vector<vector<int>> data;
-	//read_data(data, "train_s.txt",classmap,attrimap);
+	read_data(data, "train_s.txt",classmap,attrimap);
 	
 	random_shuffle(data.begin(),data.end());
 
@@ -283,9 +182,7 @@ int main() {
 	}
 	cout << endl;
 	// predict with model
-	mymodel.calProbability();
-	int cls = mymodel.predict({attrimap["red"],attrimap["heart"]});
+	//int cls = mymodel.predict({attrimap["red"],attrimap["heart"]});
 	//cout<<"Predicted class "<< cls <<endl;
 	return 0;
-	*/
 }
