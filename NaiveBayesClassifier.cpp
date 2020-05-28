@@ -106,12 +106,16 @@ class NaiveBayesClassifer
 	void set_zip(uint32_t a[]){
 		setClassesCount(a);
 		int ind = num_C;
+		cout << endl << "setting attribute in set_zip" << endl;
 		for(int i = 0 ; i < num_C; i++){
 			for(int j = 0 ; j < attr_nv; j++){
 				attributePerClass[i][j] = zip_ca[ind];
+				cout << attributePerClass[i][j] << " ";
 				++ind;
 			}
+			cout << endl;
 		}
+		cout << endl << "finish setting attribute in zip"<<endl;
 	}
 	void setClassesCount(uint32_t* sum_classes){
 		for(int i = 0 ; i < num_C; i++){
@@ -190,7 +194,7 @@ void populateData(vector<vector<int>>& data, unordered_map<string, int>& classma
 	}
 	vector<vector<int>> newarr(1, apair);
 	data.insert(data.end(), newarr.begin(), newarr.end());
-	cout << "data size: " << data.size() << endl;
+//	cout << "data size: " << data.size() << endl;
 	return;
 
 }
@@ -220,7 +224,7 @@ void read_data(vector<vector<int>>& data, string filename, unordered_map<string,
 }
 	
 /*
-void read_data(vector<vector<int>>& data, string filename,unordered_map<string,int> & classmap, 
+edoid read_data(vector<vector<int>>& data, string filename,unordered_map<string,int> & classmap, 
 	unordered_map<string,int> & attrimap) {
 	ifstream in(filename);
 	if (!in)
@@ -241,7 +245,7 @@ int read_classmap(unordered_map<string, int>& classmap, string filename) {
 	ifstream in(filename);
 	if (!in)
 	{
-		cerr << "Cannot open the File : " << filename << std::endl;
+		cerr << "Cannot open class map file : " << filename << std::endl;
 		return -1;
 	}
 	cout << "reading class map" << endl;
@@ -258,7 +262,7 @@ int read_attrmap(vector<unordered_map<string, int>>& attrmap, string filename) {
 	ifstream in(filename);
 	if (!in)
 	{
-		cerr << "Cannot open the File : " << filename << std::endl;
+		cerr << "Cannot open attribute map file : " << filename << std::endl;
 		return -1;
 	}
 	cout << "reading attribute map" << endl;

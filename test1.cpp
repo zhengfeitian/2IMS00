@@ -38,15 +38,15 @@ int32_t read_test_options(int32_t* argcp, char*** argvp, e_role* role,
 		{(void*) bitlen, T_NUM, "b", "Bit-length, default 32", false, false }, 
 		{ (void*) secparam, T_NUM, "s",
 						"Symmetric Security Bits, default: 128", false, false }, 
-		{(void*) address, T_STR, "a", "IP-address, default: localhost", false, false }, 
+		{(void*) address, T_STR, "i", "IP-address, default: localhost", false, false }, 
 		{(void*) &int_port, T_NUM, "p", "Port, default: 7766", false, false }, 
 		{ (void*) test_op, T_NUM, "t", "Single test (leave out for all operations), default: off",
 						false, false },
 		{(void*) file_name, T_STR, "f", "Training data file, default: train_all.txt",
 						false,false},
-		{(void*) cls_file, T_STR, "cf", "Class data file, default: None",
+		{(void*) cls_file, T_STR, "c", "Class data file, default: None",
 						false,false},
-		{(void*) attr_file, T_STR, "af", "Attribute data file, default: None",
+		{(void*) attr_file, T_STR, "a", "Attribute data file, default: None",
 						false,false}};
 
 	if (!parse_options(argcp, argvp, options,	sizeof(options) / sizeof(parsing_ctx))) {
@@ -83,6 +83,7 @@ NaiveBayesClassifer train_model(string filename, string cls_file, string attr_fi
 	NaiveBayesClassifer model(data, attrimap.size(), classmap.size(), attr_values_cnt);
 	return model;
 } 
+/*
 NaiveBayesClassifer train_model(string filename="train_s.txt"){
 	unordered_map<string, int> classmap = {{"apple", 0}, {"pineapple", 1}, {"cherry", 2}};
 	unordered_map<string, int> attrimap =
@@ -91,7 +92,7 @@ NaiveBayesClassifer train_model(string filename="train_s.txt"){
 	// shape
 	{"round", 3}, {"oval", 4}, {"heart", 5}};
 	vector<vector<int>> data;
-	read_data(data, filename,classmap,attrimap);
+	read_data(data, filename, classmap,attrimap);
 	
 	random_shuffle(data.begin(),data.end());
 
@@ -99,6 +100,31 @@ NaiveBayesClassifer train_model(string filename="train_s.txt"){
 	NaiveBayesClassifer model(data, 2, classmap.size(), attrimap.size());
 	return model;
 } 
+*/
+/*
+void read_data(vector<vector<int>>& data, string filename, unordered_map<string, int>& classmap,
+			vector<unordered_map<string, int>>& attrimap) {
+	ifstream in(filename);
+	if (!in)
+	{
+		cerr << "Cannot open the File : " << filename << std::endl;
+		return;
+	}
+	string c, line, attr;
+	cout << "reading files" << endl;
+	while (getline(in, line)) {
+		istringstream iss(line);
+		iss >> c;
+		vector<string> attrs;
+		while (iss >> attr) {
+			attrs.push_back(attr);
+		}
+			populateData(data, classmap, attrimap, c, attrs);
+	}
+	cout << "data construction finished" << endl;
+
+}
+*/
 
 void secure_sum(NaiveBayesClassifer& model, e_role role){
 	string address = "127.0.0.1";
