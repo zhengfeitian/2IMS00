@@ -1,0 +1,40 @@
+In constructor classes count set:
+4010 12262
+nvals 320
+Online time is distributed as follows:
+Bool: local gates: 0.004, interactive gates: 0.001, layer finish: 0.005
+Yao: local gates: 2.296, interactive gates: 0.095, layer finish: 0.158
+Yao Rev: local gates: 0.002, interactive gates: 0.001, layer finish: 0.001
+Arith: local gates: 0.001, interactive gates: 0.003, layer finish: 0.006
+SPLUT: local gates: 0.002, interactive gates: 0.001, layer finish: 0.011
+Communication: 2.142
+
+Complexities:
+Boolean Sharing: ANDs: 0 (1-bit) ; Depth: 0
+Total Vec AND: 0
+Total Non-Vec AND: 0
+XOR vals: 0 gates: 0
+Comb gates: 0, CombStruct gates: 0, Perm gates: 0, Subset gates: 0, Split gates: 0
+Yao: ANDs: 9920 ; Depth: 3
+Reverse Yao: ANDs: 0 ; Depth: 0
+Arithmetic Sharing: MULs: 0 ; Depth: 0
+SP-LUT Sharing: OT-gates: Total OT gates = 0; Depth: 1
+Total number of gates: 285 Total depth: 3
+Timings:
+Total =         45.519 ms
+Init =          0.127 ms
+CircuitGen =    0.389 ms
+Network =       3.187 ms
+BaseOTs =       746.664 ms
+Setup =         40.275 ms
+OTExtension =   21.561 ms
+Garbling =      18.65 ms
+Online =        5.242 ms
+
+Communication:
+Total Sent / Rcv        166461  bytes / 810294 bytes
+BaseOTs Sent / Rcv      49956  bytes / 49956 bytes
+Setup Sent / Rcv        163874  bytes / 482596 bytes
+OTExtension Sent / Rcv  163874  bytes / 9 bytes
+Garbling Sent / Rcv     0  bytes / 482587 bytes
+Online Sent / Rcv       2587  bytes / 327698 bytes

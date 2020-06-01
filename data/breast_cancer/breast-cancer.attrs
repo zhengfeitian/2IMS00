@@ -5,5 +5,5 @@ lt40   ge40   premeno
 yes   no 
 1   2   3 
 left   right 
-left-up   left-low   right-up  	right-low   central 
+left_up   left_low   right_up  	right_low   central 
 yes   no

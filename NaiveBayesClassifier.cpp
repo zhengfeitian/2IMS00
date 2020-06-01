@@ -60,6 +60,8 @@ class NaiveBayesClassifer
 				//if(attributesPerClass[entry[0]].find(entry[k]) == attributesPerClass[entry[0]].end())
 				if(entry[k] < 0 || entry[k]>=attr_nv)
 				{
+					cout << "k: " << k << endl;
+					cout << entry[k] << endl;
 					cout << "attribute not found" << endl;
 					exit(1);
 					//attributesPerClass[entry[0]][entry[k]] = 1;
@@ -215,9 +217,12 @@ void read_data(vector<vector<int>>& data, string filename, map<string, int>& cla
 		istringstream iss(line);
 		iss >> c;
 		vector<string> attrs;
+		bool missing_value = 0;
 		while (iss >> attr) {
+			if(attr=="?") missing_value = 1;
 			attrs.push_back(attr);
 		}
+		if (missing_value) continue;
 		populateData(data, classmap, attrimap, c, attrs);
 	}
 	cout << "data construction finished" << endl;
