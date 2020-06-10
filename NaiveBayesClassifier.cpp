@@ -57,6 +57,7 @@ class NaiveBayesClassifer
 			}
 			for(int k=1;k<=DimSize;k++)
 			{
+				if(k>=entry.size()){cout<<"k out of size " << k << endl;}
 				//if(attributesPerClass[entry[0]].find(entry[k]) == attributesPerClass[entry[0]].end())
 				if(entry[k] < 0 || entry[k]>=attr_nv)
 				{
@@ -92,6 +93,7 @@ class NaiveBayesClassifer
 		}
 		*/
 		zip_all_count();
+		cout << "initialize classifier complete"<<endl;
 	}
 	void zip_all_count(){
 		for(int i = 0 ; i < num_C; i++){

@@ -1,0 +1,37 @@
+Online time is distributed as follows:
+Bool: local gates: 0.006, interactive gates: 0.001, layer finish: 0.006
+Yao: local gates: 0.423, interactive gates: 0.023, layer finish: 0.092
+Yao Rev: local gates: 0.001, interactive gates: 0.001, layer finish: 0
+Arith: local gates: 0.001, interactive gates: 0.001, layer finish: 0.003
+SPLUT: local gates: 0.002, interactive gates: 0, layer finish: 0.006
+Communication: 1.255
+
+Complexities:
+Boolean Sharing: ANDs: 0 (1-bit) ; Depth: 0
+Total Vec AND: 0
+Total Non-Vec AND: 0
+XOR vals: 0 gates: 0
+Comb gates: 0, CombStruct gates: 0, Perm gates: 0, Subset gates: 0, Split gates: 0
+Yao: ANDs: 1953 ; Depth: 3
+Reverse Yao: ANDs: 0 ; Depth: 0
+Arithmetic Sharing: MULs: 0 ; Depth: 0
+SP-LUT Sharing: OT-gates: Total OT gates = 0; Depth: 1
+Total number of gates: 285 Total depth: 3
+Timings:
+Total =         7.982 ms
+Init =          0.118 ms
+CircuitGen =    0.057 ms
+Network =       1.552 ms
+BaseOTs =       450.79 ms
+Setup =         4.816 ms
+OTExtension =   3.249 ms
+Garbling =      1.493 ms
+Online =        3.163 ms
+
+Communication:
+Total Sent / Rcv        33333  bytes / 159570 bytes
+BaseOTs Sent / Rcv      49956  bytes / 49956 bytes
+Setup Sent / Rcv        32802  bytes / 62775 bytes
+OTExtension Sent / Rcv  32802  bytes / 9 bytes
+Garbling Sent / Rcv     0  bytes / 62766 bytes
+Online Sent / Rcv       531  bytes / 96795 bytes
